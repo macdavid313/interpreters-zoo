@@ -46,3 +46,5 @@ let ``Eval proc``() =
     Assert.Equal(run code, NumVal -12)
     let code = "(proc (f) (f (f 10)) proc (x) -(x, 11))"
     Assert.Equal(run code, NumVal -12)
+    let code = "let addBy = proc (n) proc (x) -(x, -(0, n)) in let addBy10 = (addBy 10) in (addBy10 10)"
+    Assert.Equal(run code, NumVal 20)
