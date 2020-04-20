@@ -1,0 +1,23 @@
+# F#
+[Bb]in/
+[Oo]bj/
+*.suo
+*.pidb
+*.userprefs
+*.GhostDoc.xml
+*.user
+*.dll
+*.pdb
+*.cache
+*.swp
+*.swo
+*.swn
+*.pyc
+*.orig
+
+# IDE or Editor
+.vs
+.vscode
+.ionide
+.dotnetsdk2_0/
+.dotnetsdk/
