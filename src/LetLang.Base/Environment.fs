@@ -12,7 +12,7 @@ module Environment =
     let applyEnv (env: Env) (variable: string): ExpVal option = env.TryFind(variable)
 
     let initEnv() =
-        let env = emptyEnv()
-        let env = extendEnv "i" (NumVal 1) env
-        let env = extendEnv "v" (NumVal 5) env
-        extendEnv "x" (NumVal 10) env
+        emptyEnv()
+        |> extendEnv "i" (NumVal 1)
+        |> extendEnv "v" (NumVal 5)
+        |> extendEnv "x" (NumVal 10)
