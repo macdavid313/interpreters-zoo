@@ -25,9 +25,9 @@ module Runtime =
     let extendEnv variable value (env: Env): Env = env.Add(variable, value)
 
     let extendEnvRec pName pVar pBody (env: Env): Env =
-        let pEnv = ref (emptyEnv())
-        let newEnv = extendEnv pName (ProcVal(pVar, pBody, pEnv)) env
-        pEnv.Value <- newEnv
+        let pEnvRef = ref (emptyEnv())
+        let newEnv = extendEnv pName (ProcVal(pVar, pBody, pEnvRef)) env
+        pEnvRef.Value <- newEnv
         newEnv
 
     let applyEnv (env: Env) variable = env.TryFind(variable)
