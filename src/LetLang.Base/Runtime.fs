@@ -7,7 +7,7 @@ module Runtime =
     type ExpVal =
         | NumVal of int
         | BoolVal of bool
-        | ProcVal of string * Ast.Expression * ref<Environment>
+        | ProcVal of string * Ast.Expression * ref<Env>
         | Void
 
         override this.ToString() =
@@ -18,19 +18,19 @@ module Runtime =
             | ProcVal(var, body, _) -> sprintf "(λ (%s) (%s))" var (body.ToString())
             | Void -> "#<void>"
 
-    and Environment = Env of Map<string, ExpVal>
+    and Env = Map<string, ExpVal>
 
-    let emptyEnv() = Env(Map<string, ExpVal>(Seq.empty))
+    let emptyEnv(): Env = Map<string, ExpVal>(Seq.empty)
 
-    let extendEnv variable value (Env env) = Env(env.Add(variable, value))
+    let extendEnv variable value (env: Env): Env = env.Add(variable, value)
 
-    let extendEnvRec pName pVar pBody (Env env) =
+    let extendEnvRec pName pVar pBody (env: Env): Env =
         let pEnv = ref (emptyEnv())
-        let newEnv = extendEnv pName (ProcVal(pVar, pBody, pEnv)) (Env env)
+        let newEnv = extendEnv pName (ProcVal(pVar, pBody, pEnv)) env
         pEnv.Value <- newEnv
         newEnv
 
-    let applyEnv (Env env) variable = env.TryFind(variable)
+    let applyEnv (env: Env) variable = env.TryFind(variable)
 
     let initEnv() =
         emptyEnv()
