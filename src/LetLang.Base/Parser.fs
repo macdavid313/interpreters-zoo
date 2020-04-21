@@ -4,6 +4,8 @@ open System
 open FParsec
 
 module Ast =
+    type Identifier = string
+
     type Expression =
         | ConstExpr of int
         | DiffExpr of Expression * Expression
@@ -14,6 +16,23 @@ module Ast =
         | ProcExpr of Expression * Expression
         | CallExpr of Expression * Expression
         | LetrecExpr of Expression * Expression * Expression * Expression
+
+        override this.ToString() =
+            match this with
+            | ConstExpr n -> n.ToString()
+            | DiffExpr(expr1, expr2) -> sprintf "(- %s %s)" (expr1.ToString()) (expr2.ToString())
+            | ZeroExpr expr0 -> sprintf "(zero? %s)" (expr0.ToString())
+            | IfExpr(expr0, expr1, expr2) ->
+                sprintf "(if %s :then %s :else %s)" (expr0.ToString()) (expr1.ToString()) (expr2.ToString())
+            | VarExpr var -> var
+            | LetExpr(variable, value, body) ->
+                sprintf "(let ([%s %s]) %s)" (variable.ToString()) (value.ToString()) (body.ToString())
+            | ProcExpr(variable, body) -> sprintf "(lambda (%s) %s)" (variable.ToString()) (body.ToString())
+            | CallExpr(rator, rand) -> sprintf "(%s %s)" (rator.ToString()) (rand.ToString())
+            | LetrecExpr(name, var, body, letrecBody) ->
+                sprintf "(letrec ([%s (%s) %s]) %s)" (name.ToString()) (var.ToString()) (body.ToString())
+                    (letrecBody.ToString())
+
 
     type Program = AProgram of Expression
 

@@ -1,13 +1,13 @@
 namespace LetLang.Base
 
-open System
+open Ast
 
 module Runtime =
 
     type ExpVal =
         | NumVal of int
         | BoolVal of bool
-        | ProcVal of string * Ast.Expression * ref<Env>
+        | ProcVal of Identifier * Expression * ref<Env>
         | Void
 
         override this.ToString() =
@@ -18,9 +18,9 @@ module Runtime =
             | ProcVal(var, body, _) -> sprintf "(λ (%s) (%s))" var (body.ToString())
             | Void -> "#<void>"
 
-    and Env = Map<string, ExpVal>
+    and Env = Map<Identifier, ExpVal>
 
-    let emptyEnv(): Env = Map<string, ExpVal>(Seq.empty)
+    let emptyEnv(): Env = Map<Identifier, ExpVal>(Seq.empty)
 
     let extendEnv variable value (env: Env): Env = env.Add(variable, value)
 
