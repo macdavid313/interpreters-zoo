@@ -7,8 +7,7 @@
 
   <ItemGroup>
     <Compile Include="Parser.fs" />
-    <Compile Include="Values.fs" />
-    <Compile Include="Environment.fs" />
+    <Compile Include="Runtime.fs" />    
     <Compile Include="Eval.fs" />
     <Compile Include="Repl.fs" />
   </ItemGroup>

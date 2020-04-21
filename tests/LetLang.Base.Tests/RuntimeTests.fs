@@ -4,8 +4,7 @@ open System
 open Xunit
 
 open LetLang.Base.Ast
-open LetLang.Base.Values
-open LetLang.Base.Environment
+open LetLang.Base.Runtime
 
 [<Fact>]
 let Environment() =
