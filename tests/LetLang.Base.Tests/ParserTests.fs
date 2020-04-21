@@ -31,9 +31,9 @@ let ``Parser zero``() =
 let ``Parser if``() =
     match scanAndParse "if x then -(yy, 1) else -(z,  -1)" with
     | AProgram(IfExpr(expr1, expr2, expr3)) ->
-        Assert.Equal(expr1, VarExpr "x")
-        Assert.Equal(expr2, DiffExpr(VarExpr "yy", ConstExpr 1))
-        Assert.Equal(expr3, DiffExpr(VarExpr "z", ConstExpr -1))
+        Assert.Equal(VarExpr "x", expr1)
+        Assert.Equal(DiffExpr(VarExpr "yy", ConstExpr 1), expr2)
+        Assert.Equal(DiffExpr(VarExpr "z", ConstExpr -1), expr3)
     | _ -> Assert.True(false)
 
 [<Fact>]
@@ -41,7 +41,7 @@ let ``Parser var``() =
     [| "x"; "xyz"; "pred?"; "x-y-z"; "x_y_z" |]
     |> Array.map (fun s ->
         match scanAndParse s with
-        | AProgram(expr) -> Assert.Equal(expr, VarExpr(s)))
+        | AProgram(expr) -> Assert.Equal(VarExpr(s), expr))
     |> ignore
 // illegal identifier
 
@@ -49,14 +49,28 @@ let ``Parser var``() =
 let ``Parser let``() =
     match scanAndParse "let  x = -(y, 1)  in   -(x,          y)  " with
     | AProgram(expr) ->
-        Assert.Equal(expr, LetExpr(VarExpr "x", DiffExpr(VarExpr "y", ConstExpr 1), DiffExpr(VarExpr "x", VarExpr "y")))
+        Assert.Equal(LetExpr(VarExpr "x", DiffExpr(VarExpr "y", ConstExpr 1), DiffExpr(VarExpr "x", VarExpr "y")), expr)
 
 [<Fact>]
 let ``Parser proc and call``() =
     match scanAndParse "let f = proc (x) -(x, 11) in (f (f 10))" with
     | AProgram(expr) ->
         Assert.Equal
-            (expr,
-             LetExpr
-                 (VarExpr "f", ProcExpr(VarExpr "x", DiffExpr(VarExpr "x", ConstExpr 11)),
-                  CallExpr(VarExpr "f", CallExpr(VarExpr "f", ConstExpr 10))))
+            (LetExpr
+                (VarExpr "f", ProcExpr(VarExpr "x", DiffExpr(VarExpr "x", ConstExpr 11)),
+                 CallExpr(VarExpr "f", CallExpr(VarExpr "f", ConstExpr 10))), expr)
+
+[<Fact>]
+let ``Parser letrec``() =
+    let code = @"letrec double(x) = if zero?(x) then 0 else -((double -(x,1)), -2)
+                    in (double 6)"
+    match scanAndParse code with
+    | AProgram(LetrecExpr(pName, pVar, pBody, letrecBody)) ->
+        Assert.Equal(VarExpr "double", pName)
+        Assert.Equal(VarExpr "x", pVar)
+        Assert.Equal
+            (IfExpr
+                (ZeroExpr(VarExpr "x"), ConstExpr 0,
+                 DiffExpr(CallExpr(VarExpr "double", DiffExpr(VarExpr "x", ConstExpr 1)), ConstExpr -2)), pBody)
+        Assert.Equal(CallExpr(VarExpr "double", ConstExpr 6), letrecBody)
+    | _ -> Assert.True(false)
