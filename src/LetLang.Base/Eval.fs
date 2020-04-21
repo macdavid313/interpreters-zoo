@@ -4,8 +4,9 @@ open System
 
 open Ast
 open Parser
-open Values
-open Environment
+// open Values
+//open Environment
+open Runtime
 
 module Eval =
 
@@ -46,12 +47,14 @@ module Eval =
         | LetExpr(VarExpr var, expr1, body) ->
             let newEnv = extendEnv var (valueOf expr1 env) env
             valueOf body newEnv
-        | ProcExpr(VarExpr var, expr1) -> ProcVal(var, expr1, env)
+        | ProcExpr(VarExpr var, expr1) -> ProcVal(var, expr1, ref (env))
         | CallExpr(rator, rand) ->
             let arg = valueOf rand env
             match valueOf rator env with
-            | ProcVal(var, body, env) -> valueOf body (extendEnv var arg env)
+            | ProcVal(var, body, pEnv) -> valueOf body (extendEnv var arg pEnv.Value)
             | _ -> reportWrongType "Procedure" rator
+        | LetrecExpr(VarExpr name, VarExpr var, body, letrecBody) ->
+            valueOf letrecBody (extendEnvRec name var body env)
         | _ -> Void
 
     let valueOfProgram pgm =

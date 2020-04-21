@@ -13,6 +13,7 @@ module Ast =
         | LetExpr of Expression * Expression * Expression
         | ProcExpr of Expression * Expression
         | CallExpr of Expression * Expression
+        | LetrecExpr of Expression * Expression * Expression * Expression
 
     type Program = AProgram of Expression
 
@@ -23,9 +24,12 @@ module Parser =
 
     type Parser<'t> = Parser<'t, UserState>
 
+    let allKeywords =
+        Collections.Generic.HashSet<string>([| "let"; "in"; "if"; "then"; "else"; "zero?"; "proc"; "letrec" |])
+
     let isKeyword x =
         match x with
-        | VarExpr s -> [| "let"; "if"; "then"; "else"; "zero?"; "proc" |] |> Array.contains s
+        | VarExpr s -> allKeywords.Contains s
         | _ -> false
 
     let betweenParen p = between (pchar '(') (pchar ')') p
@@ -62,7 +66,7 @@ module Parser =
                 Reply(Error, expected "identifier")
 
     let plet =
-        pipe3 (pstring "let" >>. pvar) (pchar '=' >>. pexpr) (pstring "in" >>. pexpr)
+        pipe3 (pstring "let" >>. spaces1 >>. pvar) (pchar '=' >>. pexpr) (pstring "in" >>. pexpr)
             (fun ident expr body -> LetExpr(ident, expr, body))
 
     let pproc =
@@ -70,7 +74,11 @@ module Parser =
 
     let pcall = betweenParen (pexpr .>>. pexpr) |>> CallExpr
 
-    do pexprRef := spaces >>. choice [ pconst; pdiff; pzero; pif; pvar; plet; pproc; pcall ] .>> spaces
+    let pletrec =
+        pipe4 (pstring "letrec" >>. spaces1 >>. pvar) (betweenParen pvar) (spaces .>> pchar '=' >>. pexpr)
+            (pstring "in" >>. pexpr) (fun pName pVar pBody letrecBody -> LetrecExpr(pName, pVar, pBody, letrecBody))
+
+    do pexprRef := spaces >>. choice [ pconst; pvar; pdiff; pzero; pif; pproc; pcall; pletrec; plet ] .>> spaces
 
     let pprogram = spaces >>. pexpr .>> spaces .>> eof |>> AProgram
 

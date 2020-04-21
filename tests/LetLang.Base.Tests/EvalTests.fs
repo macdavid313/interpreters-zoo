@@ -3,7 +3,7 @@ module EvalTests
 open System
 open Xunit
 
-open LetLang.Base.Values
+open LetLang.Base.Runtime
 open LetLang.Base.Eval
 
 [<Fact>]
@@ -48,9 +48,9 @@ let ``Eval proc``() =
     Assert.Equal(NumVal -12, run code)
     let code = "let addBy = proc (n) proc (x) -(x, -(0, n)) in let addBy10 = (addBy 10) in (addBy10 10)"
     Assert.Equal(NumVal 20, run code)
-(* [<Fact>]
+
+[<Fact>]
 let ``Eval letrec``() =
     let code = @"letrec double(x) = if zero?(x) then 0 else -((double -(x,1)), -2)
                     in (double 6)"
     Assert.Equal(NumVal 12, run code)
- *)
