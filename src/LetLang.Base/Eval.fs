@@ -4,8 +4,6 @@ open System
 
 open Ast
 open Parser
-// open Values
-//open Environment
 open Runtime
 
 module Eval =
@@ -14,7 +12,7 @@ module Eval =
 
     let reportWrongType expectType expr =
         let msg = sprintf "Expect type '%s' from '%s'" expectType (expr.ToString())
-        raise (WrongTypeException(""))
+        raise (WrongTypeException(msg))
 
     exception NoBindingException of string
 
