@@ -5,13 +5,21 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="Program.fs" />
+  <ItemGroup>    
+    <Compile Include="Parser.fs" />
+    <Compile Include="Runtime.fs" />
+    <Compile Include="Translator.fs" />    
+    <Compile Include="Eval.fs" />
+    <Compile Include="Repl.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FParsec" Version="1.1.1" />
     <PackageReference Include="ReadLine" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LetLang.Base\LetLang.Base.fsproj" />
   </ItemGroup>
 
 </Project>
