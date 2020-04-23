@@ -45,6 +45,3 @@ let ``Translation proc``() =
                      (NamelessLetExpr
                          (DiffExpr(NamelessVarExpr 0, NamelessVarExpr 1), DiffExpr(NamelessVarExpr 2, NamelessVarExpr 1)))),
              expr)
-
-[<Fact>]
-let ``Translation letrec``() = Assert.True(true)

@@ -19,7 +19,6 @@ module Ast =
         | ProcExpr of Expression * Expression
         | NamelessProcExpr of Expression
         | CallExpr of Expression * Expression
-        | LetrecExpr of Expression * Expression * Expression * Expression
 
         override this.ToString() =
             match this with
@@ -36,9 +35,6 @@ module Ast =
             | ProcExpr(variable, body) -> sprintf "(lambda (%s) %s)" (variable.ToString()) (body.ToString())
             | NamelessProcExpr(body) -> sprintf "(%%lexproc %s)" (body.ToString())
             | CallExpr(rator, rand) -> sprintf "(%s %s)" (rator.ToString()) (rand.ToString())
-            | LetrecExpr(name, var, body, letrecBody) ->
-                sprintf "(letrec ([%s (%s) %s]) %s)" (name.ToString()) (var.ToString()) (body.ToString())
-                    (letrecBody.ToString())
 
     type Program = AProgram of Expression
 
@@ -99,11 +95,7 @@ module Parser =
 
     let pcall = betweenParen (pexpr .>>. pexpr) |>> CallExpr
 
-    let pletrec =
-        pipe4 (pstring "letrec" >>. spaces1 >>. pvar) (betweenParen pvar) (spaces .>> pchar '=' >>. pexpr)
-            (pstring "in" >>. pexpr) (fun pName pVar pBody letrecBody -> LetrecExpr(pName, pVar, pBody, letrecBody))
-
-    do pexprRef := spaces >>. choice [ pconst; pvar; pdiff; pzero; pif; pproc; pcall; pletrec; plet ] .>> spaces
+    do pexprRef := spaces >>. choice [ pconst; pvar; pdiff; pzero; pif; pproc; pcall; plet ] .>> spaces
 
     let pprogram = spaces >>. pexpr .>> spaces .>> eof |>> AProgram
 
