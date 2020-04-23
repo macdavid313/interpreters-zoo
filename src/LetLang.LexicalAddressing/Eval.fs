@@ -44,7 +44,6 @@ module Eval =
         | NamelessProcExpr body -> ProcVal(body, env)
         | _ -> Void
 
-
     let valueOfProgram (AProgram pgm) = valueOf pgm (emptyNamelessEnv())
 
     let run =
