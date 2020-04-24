@@ -7,17 +7,6 @@ open Parser
 open Runtime
 
 module Eval =
-
-    exception WrongTypeException of string
-
-    let reportWrongType expectType expr =
-        let msg = sprintf "Expect type '%s' from '%s'" expectType (expr.ToString())
-        raise (WrongTypeException(msg))
-
-    exception NoBindingException of string
-
-    let reportNoBinding var = raise (NoBindingException(sprintf "No binding found for variable '%s'" var))
-
     let rec valueOf expr env =
         match expr with
         | ConstExpr num -> NumVal num

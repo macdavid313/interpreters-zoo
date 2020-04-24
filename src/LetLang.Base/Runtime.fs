@@ -37,3 +37,13 @@ module Runtime =
         |> extendEnv "i" (NumVal 1)
         |> extendEnv "v" (NumVal 5)
         |> extendEnv "x" (NumVal 10)
+
+    exception WrongTypeException of string
+
+    let reportWrongType expectType expr =
+        let msg = sprintf "Expect type '%s' from '%s'" expectType (expr.ToString())
+        raise (WrongTypeException(msg))
+
+    exception NoBindingException of string
+
+    let reportNoBinding var = raise (NoBindingException(sprintf "No binding found for variable '%s'" var))
