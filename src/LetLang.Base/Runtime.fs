@@ -47,3 +47,5 @@ module Runtime =
     exception NoBindingException of string
 
     let reportNoBinding var = raise (NoBindingException(sprintf "No binding found for variable '%s'" var))
+
+    exception RuntimeException

@@ -42,7 +42,7 @@ module Eval =
             | _ -> reportWrongType "Procedure" rator
         | LetrecExpr(VarExpr name, VarExpr var, body, letrecBody) ->
             valueOf letrecBody (extendEnvRec name var body env)
-        | _ -> Void
+        | _ -> raise RuntimeException
 
     let valueOfProgram pgm =
         match pgm with
