@@ -13,6 +13,8 @@ module Eval =
         let msg = sprintf "Expect type '%s' from '%s'" expectType (expr.ToString())
         raise (WrongTypeException(msg))
 
+    exception RuntimeException
+
     let rec valueOf expr (env: NamelessEnv) =
         match expr with
         | ConstExpr n -> NumVal n
@@ -42,7 +44,7 @@ module Eval =
             let value = valueOf expr0 env
             valueOf body (extendNamelessEnv value env)
         | NamelessProcExpr body -> ProcVal(body, env)
-        | _ -> Void
+        | _ -> raise RuntimeException
 
     let valueOfProgram (AProgram pgm) = valueOf pgm (emptyNamelessEnv())
 
