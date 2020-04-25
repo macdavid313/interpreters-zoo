@@ -7,17 +7,6 @@ open Parser
 open Runtime
 
 module Eval =
-
-    exception WrongTypeException of string
-
-    let reportWrongType expectType expr =
-        let msg = sprintf "Expect type '%s' from '%s'" expectType (expr.ToString())
-        raise (WrongTypeException(msg))
-
-    exception NoBindingException of string
-
-    let reportNoBinding var = raise (NoBindingException(sprintf "No binding found for variable '%s'" var))
-
     let rec valueOf expr env =
         match expr with
         | ConstExpr num -> NumVal num
@@ -53,7 +42,7 @@ module Eval =
             | _ -> reportWrongType "Procedure" rator
         | LetrecExpr(VarExpr name, VarExpr var, body, letrecBody) ->
             valueOf letrecBody (extendEnvRec name var body env)
-        | _ -> Void
+        | _ -> raise RuntimeException
 
     let valueOfProgram pgm =
         match pgm with
