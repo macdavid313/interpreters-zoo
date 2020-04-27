@@ -1,4 +1,0 @@
-namespace WhileLang
-
-module Translator =
-    ()
