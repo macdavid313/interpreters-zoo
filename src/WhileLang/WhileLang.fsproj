@@ -7,14 +7,9 @@
 
   <ItemGroup>
     <Compile Include="Parser.fs" />
-    <Compile Include="Translator.fs" />
     <Compile Include="Runtime.fs" />
     <Compile Include="Eval.fs" />
     <Compile Include="Codegen.fs" />    
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="FParsec" Version="1.1.1" />    
   </ItemGroup>
 
 </Project>
