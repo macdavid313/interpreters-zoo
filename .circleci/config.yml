@@ -8,6 +8,6 @@ jobs:
     executor: win/default     
     
     steps:
-      - checkout
-      - run: dotnet build
-      - run: dotnet test
+      - checkout      
+      - run: dotnet test -c Debug      
+      - run: dotnet test -c Release

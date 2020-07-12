@@ -1,11 +1,12 @@
 language: csharp
 mono: none
 dotnet: 3.1.201
-solution: LetLang.sln
+solution: LanguagesZoo.sln
 
 os:
   - linux
   - osx
 
 script:
-  - dotnet test
+  - dotnet test -c Debug
+  - dotnet test -c Release
