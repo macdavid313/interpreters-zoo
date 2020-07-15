@@ -1,15 +1,14 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
-using System.Linq;
 
 namespace Brainfuck
 {
     public enum TokenType
     {
         MoveLeft, MoveRight, IncByte, DecByte,
-        PutByte, GetByte,
+        WriteByte, ReadByte,
         Loop
     }
 
@@ -63,9 +62,9 @@ namespace Brainfuck
                     return String.Format("(+ {0})", Offset);
                 case TokenType.DecByte:
                     return String.Format("(- {0})", Offset);
-                case TokenType.GetByte:
+                case TokenType.ReadByte:
                     return "(getbyte)";
-                case TokenType.PutByte:
+                case TokenType.WriteByte:
                     return "(putbyte)";
                 case TokenType.Loop:
                     var sb = new StringBuilder("(loop\n  ");
@@ -107,10 +106,10 @@ namespace Brainfuck
                         yield return ReadDecByte(reader);
                         continue;
                     case ',':
-                        yield return new Token(TokenType.GetByte);
+                        yield return new Token(TokenType.ReadByte);
                         continue;
                     case '.':
-                        yield return new Token(TokenType.PutByte);
+                        yield return new Token(TokenType.WriteByte);
                         continue;
                     case '[':
                         yield return TryReadLoopBody(reader);
@@ -175,10 +174,10 @@ namespace Brainfuck
                         loopBody.Add(ReadDecByte(reader));
                         continue;
                     case ',':
-                        loopBody.Add(new Token(TokenType.GetByte));
+                        loopBody.Add(new Token(TokenType.ReadByte));
                         continue;
                     case '.':
-                        loopBody.Add(new Token(TokenType.PutByte));
+                        loopBody.Add(new Token(TokenType.WriteByte));
                         continue;
                     case '[':
                         loopBody.Add(TryReadLoopBody(reader));
