@@ -12,4 +12,4 @@ Simply run `dotnet build`, or `dotnet build -c Release` for Release product.
 
 After building, run `/path/to/Brainfuck.exe --file /path/to/BrainfuckCode`
 
-[](/src/Brainfuck/examples/Mandelbrot.gif)
+![](src/Brainfuck/examples/Mandelbrot.gif)
