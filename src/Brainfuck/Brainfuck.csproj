@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <StartupObject>Brainfuck.Program</StartupObject>
     <Nullable>disable</Nullable>
     <Win32Resource></Win32Resource>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
 </Project>
